@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "7ccc47c3a3de390aaa5390729bd80dfc9b838d05b35cfaf1ccb6b2a6979416a1"
+            "sha256": "a12901dc2f2ed9a85334276c3891a9bc8da1b63b81e8d9e1a1fa6227c8b08990"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -129,6 +129,24 @@
             "markers": "python_version >= '3.5'",
             "version": "==3.7"
         },
+        "lgpio": {
+            "hashes": [
+                "sha256:11372e653b200f76a0b3ef8a23a0735c85ec678a9f8550b9893151ed0f863fff",
+                "sha256:1594dd4fdf054ff396bf0730802732c26aa2040d6c70250d0d34f703baafd121",
+                "sha256:2aadff092f642fcdada8457c158f87259dfda3a89ec19bae0b99ff22b34aac4b",
+                "sha256:5b3c403e1fba9c17d178f1bde102726c548fc5c4fc1ccf5ec3e18f3c08e07e04",
+                "sha256:6c65ac42e878764d04a71ed12fe6d46089b36e9e8127722bf29bb2e4bc91de22",
+                "sha256:97fe5fb0e888c96031e8899e8c0eca64c63076a6d1f1e774acad8696430b2ff6",
+                "sha256:9ed135824c717901457dcf2462bb1af9f5445aa6e56bb7a9263fc064620ef586",
+                "sha256:a2f71fb95b149d8ac82c7c6bae70f054f6dc42a006ad35c90c7d8e54921fbcf4",
+                "sha256:d245f315e4bc5ba1b72df9fd935a16c99e56ccf6b41d9f66a87804c1dfd91c86",
+                "sha256:d907db79292c721c605af08187385ddb3b7af09907e1ffca56cf0cd6558ace0a",
+                "sha256:e9f4f3915abe5ae0ffdb4b96f485076d80a663876d839e2d3fd9218a71b9873e",
+                "sha256:f8f1a2818ed4293182999679ac8559aea70d45743f5a3ae8025837e529d9e0d4",
+                "sha256:f95d6a6db23f99e745e0aee36cd49a515dd6846a5ddb49474c73a390bb2048e2"
+            ],
+            "version": "==0.2.2.0"
+        },
         "pillow": {
             "hashes": [
                 "sha256:048ad577748b9fa4a99a0548c64f2cb8d672d5bf2e643a739ac8faff1164238c",
@@ -202,6 +220,7 @@
                 "sha256:ff61bfd9253c3915e6d41c651d5f962da23eda633cf02262990094a18a55371a"
             ],
             "index": "pypi",
+            "markers": "python_version >= '3.8'",
             "version": "==10.3.0"
         },
         "python-dotenv": {
@@ -210,6 +229,7 @@
                 "sha256:f7b63ef50f1b690dddf550d03497b66d609393b40b564ed0d674909a68ebf16a"
             ],
             "index": "pypi",
+            "markers": "python_version >= '3.8'",
             "version": "==1.0.1"
         },
         "requests": {
@@ -218,7 +238,17 @@
                 "sha256:942c5a758f98d790eaed1a29cb6eefc7ffb0d1cf7af05c3d2791656dbd6ad1e1"
             ],
             "index": "pypi",
+            "markers": "python_version >= '3.7'",
             "version": "==2.31.0"
+        },
+        "rpi-lgpio": {
+            "hashes": [
+                "sha256:48960700e1f49a9fc80900c2578ff00168311333f0ce126ec8a0fe7fd1b673d5",
+                "sha256:f7aacfa4d628152d1fc686fde1297705c9ba67dc89e1aed19f0e4ffc12d9222f"
+            ],
+            "index": "pypi",
+            "markers": "python_version >= '3.7'",
+            "version": "==0.5"
         },
         "urllib3": {
             "hashes": [
