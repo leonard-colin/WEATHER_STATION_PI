@@ -17,7 +17,7 @@ class Weather:
         self.api_key = api_id
         self.prevision = [0, [[0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0]]]
         self.data = requests.get(
-            f"https://api.openweathermap.org/data/2.5/onecall?lat={self.latitude}&lon={self.longitude}&lang=fr&appid={self.api_key}").json()
+            f"https://api.openweathermap.org/data/3.0/onecall?lat={self.latitude}&lon={self.longitude}&lang=fr&appid={self.api_key}").json()
         self.prevision[0] = self.data["daily"][0]["dt"]
         self.prevision[1][6] = [self.data["daily"][0]["pressure"],
                                 round(self.data["daily"][0]["temp"]["day"] - 273.15, 0)]
@@ -25,7 +25,7 @@ class Weather:
 
     def update(self):
         self.data = requests.get(
-            f"https://api.openweathermap.org/data/2.5/onecall?lat={self.latitude}&lon={self.longitude}&lang=fr&appid={self.api_key}").json()
+            f"https://api.openweathermap.org/data/3.0/onecall?lat={self.latitude}&lon={self.longitude}&lang=fr&appid={self.api_key}").json()
         return self.data
 
     def current_time(self):
@@ -174,7 +174,7 @@ class Pollution:
 
     def update(self, lattitude, longitude, api_id):
         self.data = requests.get(
-            f"http://api.openweathermap.org/data/2.5/air_pollution?lat={lattitude}&lon={longitude}&appid={api_id}").json()
+            f"http://api.openweathermap.org/data/3.0/air_pollution?lat={lattitude}&lon={longitude}&appid={api_id}").json()
         return self.data
 
     def co(self):

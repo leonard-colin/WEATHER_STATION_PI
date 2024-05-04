@@ -1,19 +1,20 @@
 # -*- coding:utf-8 -*-
-
+import os
 from weather import *
 from news import *
 from display import *
 import json
+from dotenv import load_dotenv
+
+load_dotenv()
 
 lat = "47.2"
 lon = "-1.5"
-api_key_weather = ""
-api_key_news = ""
+api_key_weather = os.environ.get("WEATHER_API_KEY")
+api_key_news = os.environ.get("NEWS_API_KEY")
 debug = 0
-if debug ==0:
+if debug == 0:
     import epd7in5b_V2
-else:
-    pass
 
 def map_resize(val, in_mini, in_maxi, out_mini, out_maxi):
     if in_maxi - in_mini != 0:
@@ -50,7 +51,7 @@ def main():
 
     ###################################################################################################################
     # NEXT HOUR RAIN
-    try :
+    try:
         data_rain = weather.rain_next_hour()
 
         # FRAME
@@ -155,7 +156,7 @@ def main():
     data = weather.prevision[1]
     global been_reboot
     if (been_reboot == 1):
-        try :
+        try:
             file = open("saved.txt","r")
             weather.prevision[1] = json.loads(file.read())
             data = weather.prevision[1]
@@ -164,7 +165,7 @@ def main():
         except:
             pass
 
-    else :
+    else:
         pass
 
     file = open("saved.txt", "w")
@@ -228,12 +229,12 @@ def main():
     ###################################################################################################################
     print("Updating screen...")
     # display.im_black.show()
-    # display.im_red.show()  
+    # display.im_red.show()
     print("\tPrinting...")
 
     time.sleep(2)
     epd.display(epd.getbuffer(display.im_black), epd.getbuffer(display.im_red))
-    time.sleep(2)	
+    time.sleep(2)
     return True
 
 
@@ -262,7 +263,7 @@ if __name__ == "__main__":
         print("Weather Updated")
         # pollution.update(lat, lon, api_key_weather)
         news.update(api_key_news)
-        print("News Updated")        
+        print("News Updated")
         print("Main program running...")
         epd.init()
         epd.Clear()

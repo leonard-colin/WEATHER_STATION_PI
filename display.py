@@ -2,6 +2,8 @@
 
 from PIL import Image, ImageDraw, ImageFont
 
+ImageFont.load_default()
+
 font_choice = 7
 if font_choice == 1:
     project_font = "font/Architects_Daughter/ArchitectsDaughter-Regular.ttf"
@@ -43,7 +45,7 @@ class Display:
             self.draw_red.ellipse((x - r, y - r, x + r, y + r), fill=0)
 
     def draw_icon(self, x, y, c, l, h, icon):
-        im_icon = Image.open("icons/" + icon + ".png")
+        im_icon = Image.open(f"icons/{icon}.png")
         # im_icon = im_icon.convert("LA")
         im_icon = im_icon.resize((l, h))
         if c == "b":
