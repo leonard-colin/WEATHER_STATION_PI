@@ -16,12 +16,14 @@ debug = 0
 if debug == 0:
     import epd7in5b_V2
 
+
 def map_resize(val, in_mini, in_maxi, out_mini, out_maxi):
-    if in_maxi - in_mini != 0:
-        out_temp = (val - in_mini) * (out_maxi - out_mini) // (in_maxi - in_mini) + out_mini
-    else:
-        out_temp = out_mini
-    return out_temp
+    return (
+        (val - in_mini) * (out_maxi - out_mini) // (in_maxi - in_mini)
+        + out_mini
+        if in_maxi - in_mini != 0
+        else out_mini
+    )
 
 
 def main():
@@ -33,7 +35,9 @@ def main():
     display.draw_black.line((5, 350, 795, 350), fill=0, width=1)  # HORIZONTAL SEPARATION
 
     # UPDATED AT
-    display.draw_black.text((10, 8), "Mis à jour le " + weather.current_time(), fill=0, font=font8)
+    display.draw_black.text(
+        (10, 8), f"Mis à jour le {weather.current_time()}", fill=0, font=font8
+    )
 
     ###################################################################################################################
     # CURRENT WEATHER
@@ -42,7 +46,12 @@ def main():
     display.draw_black.text((120, 15), weather.current_temp(), fill=0, font=font48)  # CURRENT TEMP
     display.draw_black.text((230, 15), weather.current_hum(), fill=0, font=font48)  # CURRENT HUM
     display.draw_black.text((245, 65), "Humidité", fill=0, font=font12)  # LABEL "HUMIDITY"
-    display.draw_black.text((120, 75), weather.current_wind()[0] + " " + weather.current_wind()[1], fill=0, font=font24)
+    display.draw_black.text(
+        (120, 75),
+        f"{weather.current_wind()[0]} {weather.current_wind()[1]}",
+        fill=0,
+        font=font24,
+    )
 
     display.draw_icon(120, 105, "b", 35, 35, "sunrise")  # SUNRISE ICON
     display.draw_black.text((160, 110), weather.current_sunrise(), fill=0, font=font16)  # SUNRISE TIME
@@ -151,26 +160,20 @@ def main():
     x = [55, 105, 155, 205, 255, 305, 355]  # X value of the points
     j = ["J-6", "J-5", "J-4", "J-3", "J-2", "J-1", "J"]  # LABELS
 
-
     weather.graph_p_t()
     data = weather.prevision[1]
     global been_reboot
     if (been_reboot == 1):
         try:
-            file = open("saved.txt","r")
-            weather.prevision[1] = json.loads(file.read())
-            data = weather.prevision[1]
-            been_reboot = 0
-            file.close()
+            with open("saved.txt", "r") as file:
+                weather.prevision[1] = json.loads(file.read())
+                data = weather.prevision[1]
+                been_reboot = 0
         except:
             pass
 
-    else:
-        pass
-
-    file = open("saved.txt", "w")
-    file.write(str(data))
-    file.close()
+    with open("saved.txt", "w") as file:
+        file.write(str(data))
     for i in range(len(data)):
         pression.append(data[i][0])
         temperature.append(data[i][1])
@@ -216,15 +219,18 @@ def main():
             display.draw_black.text((550, 40), news_selected[0], fill=0, font=font14)
             break
         else:
-            if len(news_selected[i]) <= 3 :
+            if len(news_selected[i]) <= 3:
                 for j in range(len(news_selected[i])):
                     display.draw_black.text((550, 40 + j * 15 + i * 60), news_selected[i][j], fill=0, font=font14)
             else:
                 for j in range(2):
                     display.draw_black.text((550, 40 + j * 15 + i * 60), news_selected[i][j], fill=0, font=font14)
-                display.draw_black.text((550, 40 + 2 * 15 + i * 60), news_selected[i][2] + "[...]", fill=0, font=font14)
-
-
+                display.draw_black.text(
+                    (550, 40 + 2 * 15 + i * 60),
+                    f"{news_selected[i][2]}[...]",
+                    fill=0,
+                    font=font14,
+                )
 
     ###################################################################################################################
     print("Updating screen...")
@@ -240,7 +246,7 @@ def main():
 
 if __name__ == "__main__":
     global been_reboot
-    been_reboot=1
+    been_reboot = 1
     while True:
         try:
             weather = Weather(lat, lon, api_key_weather)
@@ -275,4 +281,3 @@ if __name__ == "__main__":
         print("Done")
         print("------------")
         time.sleep(1800)
-
