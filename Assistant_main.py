@@ -1,5 +1,7 @@
 # -*- coding:utf-8 -*-
 import os
+import colorama
+from colorama import Fore, Style
 from weather import *
 from news import *
 from display import *
@@ -7,6 +9,7 @@ import json
 from dotenv import load_dotenv
 
 load_dotenv()
+colorama.init(autoreset=True)
 
 lat = "47.2"
 lon = "-1.5"
@@ -233,10 +236,10 @@ def main():
                 )
 
     ###################################################################################################################
-    print("Updating screen...")
+    print(Fore.GREEN + "Updating screen...")
     # display.im_black.show()
     # display.im_red.show()
-    print("\tPrinting...")
+    print(Fore.GREEN + "\tPrinting...")
 
     time.sleep(2)
     epd.display(epd.getbuffer(display.im_black), epd.getbuffer(display.im_red))
@@ -253,31 +256,33 @@ if __name__ == "__main__":
             # pollution = Pollution()
             news = News()
             break
-        except:
+        except Exception:
             current_time = time.strftime("%d/%m/%Y %H:%M:%S", time.localtime())
-            print("INITIALIZATION PROBLEM- @" + current_time)
+            print(Fore.RED + "INITIALIZATION PROBLEM- @" + current_time)
             time.sleep(2)
+
     epd = epd7in5b_V2.EPD()
     while True:
         # Defining objects
         current_time = time.strftime("%d/%m/%Y %H:%M", time.localtime())
-        print("Begin update @" + current_time)
-        print("Creating display")
+        print(Fore.YELLOW + "Begin update at" + current_time)
+        print(Fore.YELLOW + "Creating display")
         display = Display()
         # Update values
         weather.update()
-        print("Weather Updated")
+        print(Fore.GREEN + "Weather Updated")
         # pollution.update(lat, lon, api_key_weather)
         news.update(api_key_news)
-        print("News Updated")
-        print("Main program running...")
+        print(Fore.GREEN + "News Updated")
+
+        print(Fore.GREEN + Style.BRIGHT + "Main program running...")
         epd.init()
         epd.Clear()
         main()
-        print("Going to sleep...")
+        print(Fore.YELLOW + Style.BRIGHT + "Going to sleep...")
         epd.init()
         epd.sleep()
-        print("Sleeping ZZZzzzzZZZzzz")
-        print("Done")
+        print(Fore.CYAN + "Sleeping ZZZzzzzZZZzzz")
+        print(Fore.CYAN + "Done")
         print("------------")
         time.sleep(1800)
