@@ -11,8 +11,9 @@ from dotenv import load_dotenv
 load_dotenv()
 colorama.init(autoreset=True)
 
-lat = "47.2"
-lon = "-1.5"
+# Paris
+lat = "48.864716"
+lon = "2.349014"
 api_key_weather = os.environ.get("WEATHER_API_KEY")
 api_key_news = os.environ.get("NEWS_API_KEY")
 debug = 0
@@ -44,6 +45,7 @@ def main():
 
     ###################################################################################################################
     # CURRENT WEATHER
+    display.draw_black.text((225, 150), "PARIS", fill=0, font=font16)
     display.draw_icon(20, 55, "r", 75, 75,
                       weather.weather_description(weather.current_weather())[0])  # CURRENT WEATHER ICON
     display.draw_black.text((120, 15), weather.current_temp(), fill=0, font=font48)  # CURRENT TEMP
