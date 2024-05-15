@@ -7,6 +7,7 @@ from news import *
 from display import *
 import json
 from dotenv import load_dotenv
+import argparse
 
 load_dotenv()
 colorama.init(autoreset=True)
@@ -20,6 +21,12 @@ debug = 0
 if debug == 0:
     import epd7in5b_V2
 
+def parse_arguments():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--show-graph", help="Display bottom graphs", action="store_true")
+    args = parser.parse_args()
+    return args
+
 
 def map_resize(val, in_mini, in_maxi, out_mini, out_maxi):
     return (
@@ -31,6 +38,9 @@ def map_resize(val, in_mini, in_maxi, out_mini, out_maxi):
 
 
 def main():
+
+    args = parse_arguments()
+    
     ##################################################################################################################
     # FRAME
     display.draw_black.rectangle((5, 5, 795, 475), fill=255, outline=0, width=2)  # INNER FRAME
@@ -183,34 +193,35 @@ def main():
         pression.append(data[i][0])
         temperature.append(data[i][1])
 
-    # PRESSURE
-    display.draw_black.line((40, mini, 40, maxi + 20), fill=0, width=1)  # GRAPH AXIS
-    display.draw_black.text((10, mini), str(max(pression)), fill=0, font=font12)  # MAX AXIS GRAPH LABEL
-    display.draw_black.text((10, maxi), str(min(pression)), fill=0, font=font12)  # MIN AXIS GRAPH LABEL
-    display.draw_black.text((10, mini + (maxi - mini) // 2), str((max(pression) + min(pression)) // 2), fill=0,
-                            font=font12)  # MID VALUE LABEL
-    for i in range(len(x)):  # UPDATE CIRCLE POINTS
-        display.draw_black.text((x[i], 455), j[i], fill=0, font=font12)
-        display.draw_circle(x[i], map_resize(pression[i], min(pression), max(pression), maxi, mini), 3, "r")
-    for i in range(len(x) - 1):  # UPDATE LINE
-        display.draw_red.line((x[i], map_resize(pression[i], min(pression), max(pression), maxi, mini), x[i + 1],
-                               map_resize(pression[i + 1], min(pression), max(pression), maxi, mini)), fill=0,
-                              width=2)
-    # TEMPERATURE
-    display.draw_black.line((430, mini, 430, maxi + 20), fill=0, width=1)  # GRAPH AXIS
-    display.draw_black.text((410, mini), str(max(temperature)), fill=0, font=font12)  # MAX AXIS GRAPH LABEL
-    display.draw_black.text((410, maxi), str(min(temperature)), fill=0, font=font12)  # MIN AXIS GRAPH LABEL
-    display.draw_black.text((410, mini + (maxi - mini) // 2), str((max(temperature) + min(temperature)) // 2), fill=0,
-                            font=font12)  # MID VALUE LABEL
-    for i in range(len(x)):  # UPDATE CIRCLE POINTS
-        display.draw_black.text((x[i] + 400, 455), j[i], fill=0, font=font12)
-        display.draw_circle(x[i] + 400, map_resize(temperature[i], min(temperature), max(temperature), maxi, mini), 3,
-                            "r")
-    for i in range(len(x) - 1):  # UPDATE LINE
-        display.draw_red.line((x[i] + 400, map_resize(temperature[i], min(temperature), max(temperature), maxi, mini),
-                               x[i + 1] + 400,
-                               map_resize(temperature[i + 1], min(temperature), max(temperature), maxi, mini)),
-                              fill=0, width=2)
+    if args.show_graph:
+        # PRESSURE
+        display.draw_black.line((40, mini, 40, maxi + 20), fill=0, width=1)  # GRAPH AXIS
+        display.draw_black.text((10, mini), str(max(pression)), fill=0, font=font12)  # MAX AXIS GRAPH LABEL
+        display.draw_black.text((10, maxi), str(min(pression)), fill=0, font=font12)  # MIN AXIS GRAPH LABEL
+        display.draw_black.text((10, mini + (maxi - mini) // 2), str((max(pression) + min(pression)) // 2), fill=0,
+                                font=font12)  # MID VALUE LABEL
+        for i in range(len(x)):  # UPDATE CIRCLE POINTS
+            display.draw_black.text((x[i], 455), j[i], fill=0, font=font12)
+            display.draw_circle(x[i], map_resize(pression[i], min(pression), max(pression), maxi, mini), 3, "r")
+        for i in range(len(x) - 1):  # UPDATE LINE
+            display.draw_red.line((x[i], map_resize(pression[i], min(pression), max(pression), maxi, mini), x[i + 1],
+                                map_resize(pression[i + 1], min(pression), max(pression), maxi, mini)), fill=0,
+                                width=2)
+        # TEMPERATURE
+        display.draw_black.line((430, mini, 430, maxi + 20), fill=0, width=1)  # GRAPH AXIS
+        display.draw_black.text((410, mini), str(max(temperature)), fill=0, font=font12)  # MAX AXIS GRAPH LABEL
+        display.draw_black.text((410, maxi), str(min(temperature)), fill=0, font=font12)  # MIN AXIS GRAPH LABEL
+        display.draw_black.text((410, mini + (maxi - mini) // 2), str((max(temperature) + min(temperature)) // 2), fill=0,
+                                font=font12)  # MID VALUE LABEL
+        for i in range(len(x)):  # UPDATE CIRCLE POINTS
+            display.draw_black.text((x[i] + 400, 455), j[i], fill=0, font=font12)
+            display.draw_circle(x[i] + 400, map_resize(temperature[i], min(temperature), max(temperature), maxi, mini), 3,
+                                "r")
+        for i in range(len(x) - 1):  # UPDATE LINE
+            display.draw_red.line((x[i] + 400, map_resize(temperature[i], min(temperature), max(temperature), maxi, mini),
+                                x[i + 1] + 400,
+                                map_resize(temperature[i + 1], min(temperature), max(temperature), maxi, mini)),
+                                fill=0, width=2)
 
     ###################################################################################################################
     # ALERT AND POLLUTION
