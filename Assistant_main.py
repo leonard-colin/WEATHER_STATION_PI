@@ -8,6 +8,7 @@ from display import *
 import json
 from dotenv import load_dotenv
 import argparse
+from datetime import time as _t
 
 load_dotenv()
 colorama.init(autoreset=True)
@@ -35,6 +36,15 @@ def map_resize(val, in_mini, in_maxi, out_mini, out_maxi):
         if in_maxi - in_mini != 0
         else out_mini
     )
+
+def check_for_shutdown():
+    current_time = time.strftime("%H:%M", time.localtime())
+    if "06:00" >= current_time >= "00:00":
+        try:
+            epd7in5b_V2.epdconfig.module_exit(cleanup=True)
+            exit()
+        except Exception as e:
+            print(e)
 
 
 def main():
@@ -291,6 +301,7 @@ if __name__ == "__main__":
         print(Fore.GREEN + Style.BRIGHT + "Main program running...")
         epd.init()
         epd.Clear()
+        check_for_shutdown()
         main()
         print(Fore.YELLOW + Style.BRIGHT + "Going to sleep...")
         epd.init()
