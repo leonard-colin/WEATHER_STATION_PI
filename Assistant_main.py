@@ -54,7 +54,7 @@ def main():
     ##################################################################################################################
     # FRAME
     display.draw_black.rectangle((5, 5, 795, 475), fill=255, outline=0, width=2)  # INNER FRAME
-    display.draw_black.line((540, 5, 540, 350), fill=0, width=1)  # VERTICAL SEPARATION
+    # display.draw_black.line((540, 5, 540, 350), fill=0, width=1)  # VERTICAL SEPARATION
     display.draw_black.line((350, 5, 350, 350), fill=0, width=1)  # VERTICAL SEPARATION slim
     display.draw_black.line((5, 350, 795, 350), fill=0, width=1)  # HORIZONTAL SEPARATION
 
@@ -104,76 +104,65 @@ def main():
 
     ###################################################################################################################
     # HOURLY FORECAST
-    display.draw_black.text((30, 227), "+3h", fill=0, font=font16)  # +3h LABEL
-    display.draw_black.text((150, 227), "+6h", fill=0, font=font16)  # +6h LABEL
-    display.draw_black.text((270, 227), "+12h", fill=0, font=font16)  # +12h LABEL
-    # 3H
-    display.draw_icon(25, 245, "r", 50, 50,
-                      weather.weather_description(weather.hourly_forecast()["+3h"]["id"])[0])  # +3H WEATHER ICON
-    display.draw_black.text((25, 295), weather.weather_description(weather.hourly_forecast()["+3h"]["id"])[1], fill=0,
-                            font=font12)  # WEATHER DESCRIPTION +3h
-    display.draw_black.text((35, 307), weather.hourly_forecast()["+3h"]["temp"], fill=0, font=font16)  # TEMP +3H
-    display.draw_black.text((35, 323), weather.hourly_forecast()["+3h"]["pop"], fill=0, font=font16)  # POP +3H
-    # +6h
-    display.draw_icon(145, 245, "r", 50, 50,
-                      weather.weather_description(weather.hourly_forecast()["+6h"]["id"])[0])  # +6H WEATHER ICON
-    display.draw_black.text((145, 295), weather.weather_description(weather.hourly_forecast()["+6h"]["id"])[1], fill=0,
-                            font=font12)  # WEATHER DESCRIPTION +6h
-    display.draw_black.text((155, 307), weather.hourly_forecast()["+6h"]["temp"], fill=0, font=font16)  # TEMP +6H
-    display.draw_black.text((155, 323), weather.hourly_forecast()["+6h"]["pop"], fill=0, font=font16)  # POP +6H
-    # +12h
-    display.draw_icon(265, 245, "r", 50, 50,
-                      weather.weather_description(weather.hourly_forecast()["+12h"]["id"])[0])  # +12H WEATHER ICON
-    display.draw_black.text((265, 295), weather.weather_description(weather.hourly_forecast()["+12h"]["id"])[1], fill=0,
-                            font=font12)  # WEATHER DESCRIPTION +12h
-    display.draw_black.text((275, 307), weather.hourly_forecast()["+12h"]["temp"], fill=0, font=font16)  # TEMP +12H
-    display.draw_black.text((275, 323), weather.hourly_forecast()["+12h"]["pop"], fill=0, font=font16)  # POP +12H
+    hourly_min_left = 30
+    hourly_min_up = 227
+
+    # Define the horizontal spacing between hourly forecast periods
+    horizontal_spacing = 120
+
+    # Iterate over hourly forecast periods
+    for i, forecast_period in enumerate(["+3h", "+6h", "+12h"]):
+        # Calculate position based on index
+        current_left = hourly_min_left + i * horizontal_spacing
+
+        # Draw label
+        display.draw_black.text((current_left, hourly_min_up), forecast_period, fill=0, font=font16)
+
+        # Draw weather icon
+        display.draw_icon(current_left - 5, hourly_min_up + 20, "r", 50, 50, weather.weather_description(weather.hourly_forecast()[forecast_period]["id"])[0])
+
+        # Draw weather description
+        display.draw_black.text((current_left, hourly_min_up + 70), weather.weather_description(weather.hourly_forecast()[forecast_period]["id"])[1], fill=0, font=font12)
+
+        # Draw temperature
+        display.draw_black.text((current_left, hourly_min_up + 85), weather.hourly_forecast()[forecast_period]["temp"], fill=0, font=font16)
+        
+
+        # Draw rain probability
+        display.draw_black.text((current_left, hourly_min_up + 100), weather.hourly_forecast()[forecast_period]["pop"], fill=0, font=font16)
+
 
     ###################################################################################################################
     # DAILY FORECAST
-    # +24h
-    display.draw_black.text((360, 30), weather.daily_forecast()["+24h"]["date"], fill=0, font=font16)  # +24H DAY
-    display.draw_icon(400, 50, "r", 50, 50,
-                      weather.weather_description(weather.daily_forecast()["+24h"]["id"])[0])  # +24H WEATHER ICON
-    display.draw_black.text((465, 50), weather.daily_forecast()["+24h"]["min"], fill=0, font=font14)
-    display.draw_black.text((498, 50), "min", fill=0, font=font14)  # +24H MIN TEMPERATURE
-    display.draw_black.text((465, 65), weather.daily_forecast()["+24h"]["max"], fill=0, font=font14)
-    display.draw_black.text((498, 65), "max", fill=0, font=font14)  # +24H MAX TEMPERATURE
-    display.draw_black.text((465, 80), weather.daily_forecast()["+24h"]["pop"], fill=0, font=font14)
-    display.draw_black.text((498, 80), "pluie", fill=0, font=font14)  # +24H RAIN PROBABILITY
+    min_left = 20
+    min_up = 355
 
-    # +48h
-    display.draw_black.text((360, 105), weather.daily_forecast()["+48h"]["date"], fill=0, font=font16)  # +48H DAY
-    display.draw_icon(400, 125, "r", 50, 50,
-                      weather.weather_description(weather.daily_forecast()["+48h"]["id"])[0])  # +48H WEATHER ICON
-    display.draw_black.text((465, 125), weather.daily_forecast()["+48h"]["min"], fill=0, font=font14)
-    display.draw_black.text((498, 125), "min", fill=0, font=font14)  # +48H MIN TEMPERATURE
-    display.draw_black.text((465, 140), weather.daily_forecast()["+48h"]["max"], fill=0, font=font14)
-    display.draw_black.text((498, 140), "max", fill=0, font=font14)  # +48H MAX TEMPERATURE
-    display.draw_black.text((465, 155), weather.daily_forecast()["+48h"]["pop"], fill=0, font=font14)
-    display.draw_black.text((498, 155), "pluie", fill=0, font=font14)  # +48H RAIN PROBABILITY
+    # Define the horizontal spacing between days
+    horizontal_spacing = 200
 
-    # +72h
-    display.draw_black.text((360, 180), weather.daily_forecast()["+72h"]["date"], fill=0, font=font16)  # +72H DAY
-    display.draw_icon(400, 200, "r", 50, 50,
-                      weather.weather_description(weather.daily_forecast()["+72h"]["id"])[0])  # +72H WEATHER ICON
-    display.draw_black.text((465, 200), weather.daily_forecast()["+72h"]["min"], fill=0, font=font14)
-    display.draw_black.text((498, 200), "min", fill=0, font=font14)  # +72H MIN TEMPERATURE
-    display.draw_black.text((465, 215), weather.daily_forecast()["+72h"]["max"], fill=0, font=font14)
-    display.draw_black.text((498, 215), "max", fill=0, font=font14)  # +72H MAX TEMPERATURE
-    display.draw_black.text((465, 230), weather.daily_forecast()["+72h"]["pop"], fill=0, font=font14)
-    display.draw_black.text((498, 230), "pluie", fill=0, font=font14)  # +72H RAIN PROBABILITY
+    # Iterate over forecast periods
+    for i, forecast_period in enumerate(["+24h", "+48h", "+72h", "+96h"]):
+        # Calculate position based on index
+        current_left = min_left + i * horizontal_spacing
 
-    # +96h
-    display.draw_black.text((360, 255), weather.daily_forecast()["+96h"]["date"], fill=0, font=font16)  # +96H DAY
-    display.draw_icon(400, 275, "r", 50, 50,
-                      weather.weather_description(weather.daily_forecast()["+96h"]["id"])[0])  # +96H WEATHER ICON
-    display.draw_black.text((465, 275), weather.daily_forecast()["+96h"]["min"], fill=0, font=font14)
-    display.draw_black.text((498, 275), "min", fill=0, font=font14)  # +96H MIN TEMPERATURE
-    display.draw_black.text((465, 290), weather.daily_forecast()["+96h"]["max"], fill=0, font=font14)
-    display.draw_black.text((498, 290), "max", fill=0, font=font14)  # +96H MAX TEMPERATURE
-    display.draw_black.text((465, 305), weather.daily_forecast()["+96h"]["pop"], fill=0, font=font14)
-    display.draw_black.text((498, 305), "pluie", fill=0, font=font14)  # +96H RAIN PROBABILITY
+        # Draw day
+        display.draw_black.text((current_left, min_up), weather.daily_forecast()[forecast_period]["date"], fill=0, font=font16)
+
+        # Draw weather icon
+        display.draw_icon(current_left, min_up + 40, "r", 50, 50, weather.weather_description(weather.daily_forecast()[forecast_period]["id"])[0])
+
+        # Draw min temperature
+        display.draw_black.text((current_left + 60, min_up + 40), weather.daily_forecast()[forecast_period]["min"], fill=0, font=font14)
+        display.draw_black.text((current_left + 60, min_up + 60), weather.daily_forecast()[forecast_period]["max"], fill=0, font=font14)
+        display.draw_black.text((current_left + 60, min_up + 80), weather.daily_forecast()[forecast_period]["pop"], fill=0, font=font14)
+
+        # Draw labels for temperature and rain probability
+        display.draw_black.text((current_left + 100, min_up + 40), "min", fill=0, font=font14)
+        display.draw_black.text((current_left + 100, min_up + 60), "max", fill=0, font=font14)
+        display.draw_black.text((current_left + 100, min_up + 80), "pluie", fill=0, font=font14)
+
+
+
 
     ###################################################################################################################
     # GRAPHS
@@ -240,20 +229,20 @@ def main():
     ###################################################################################################################
     # NEWS UPDATE
     news_selected = news.selected_title()
-    display.draw_black.text((550, 15), "NEWS", fill=0, font=font24)
+    display.draw_black.text((360, 10), "NEWS", fill=0, font=font24)
     for i in range(5):
         if len(news_selected) == 1:
-            display.draw_black.text((550, 40), news_selected[0], fill=0, font=font14)
+            display.draw_black.text((360, 45), news_selected[0], fill=0, font=font14)
             break
         else:
             if len(news_selected[i]) <= 3:
                 for j in range(len(news_selected[i])):
-                    display.draw_black.text((550, 40 + j * 15 + i * 60), news_selected[i][j], fill=0, font=font14)
+                    display.draw_black.text((360, 45 + j * 15 + i * 60), news_selected[i][j], fill=0, font=font14)
             else:
                 for j in range(2):
-                    display.draw_black.text((550, 40 + j * 15 + i * 60), news_selected[i][j], fill=0, font=font14)
+                    display.draw_black.text((360, 45 + j * 15 + i * 60), news_selected[i][j], fill=0, font=font14)
                 display.draw_black.text(
-                    (550, 40 + 2 * 15 + i * 60),
+                    (360, 45 + 2 * 15 + i * 60),
                     f"{news_selected[i][2]}[...]",
                     fill=0,
                     font=font14,
@@ -280,9 +269,10 @@ if __name__ == "__main__":
             # pollution = Pollution()
             news = News()
             break
-        except Exception:
+        except Exception as e:
             current_time = time.strftime("%d/%m/%Y %H:%M:%S", time.localtime())
             print(Fore.RED + "INITIALIZATION PROBLEM- @" + current_time)
+            print(e)
             time.sleep(2)
 
     epd = epd7in5b_V2.EPD()
