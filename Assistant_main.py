@@ -178,32 +178,33 @@ def main():
     ###################################################################################################################
     # GRAPHS
     # PRESSURE & TEMPERATURE
-    pression = []
-    temperature = []
-    maxi = 440  # MAX VERT. PIXEL OF THE GRAPH
-    mini = 360  # MIN VERT PIXEL OF THE GRAPH
-    x = [55, 105, 155, 205, 255, 305, 355]  # X value of the points
-    j = ["J-6", "J-5", "J-4", "J-3", "J-2", "J-1", "J"]  # LABELS
-
-    weather.graph_p_t()
-    data = weather.prevision[1]
-    global been_reboot
-    if (been_reboot == 1):
-        try:
-            with open("saved.txt", "r") as file:
-                weather.prevision[1] = json.loads(file.read())
-                data = weather.prevision[1]
-                been_reboot = 0
-        except:
-            pass
-
-    with open("saved.txt", "w") as file:
-        file.write(str(data))
-    for i in range(len(data)):
-        pression.append(data[i][0])
-        temperature.append(data[i][1])
-
     if args.show_graph:
+
+        pression = []
+        temperature = []
+        maxi = 440  # MAX VERT. PIXEL OF THE GRAPH
+        mini = 360  # MIN VERT PIXEL OF THE GRAPH
+        x = [55, 105, 155, 205, 255, 305, 355]  # X value of the points
+        j = ["J-6", "J-5", "J-4", "J-3", "J-2", "J-1", "J"]  # LABELS
+
+        weather.graph_p_t()
+        data = weather.prevision[1]
+        global been_reboot
+        if (been_reboot == 1):
+            try:
+                with open("saved.txt", "r") as file:
+                    weather.prevision[1] = json.loads(file.read())
+                    data = weather.prevision[1]
+                    been_reboot = 0
+            except:
+                pass
+
+        with open("saved.txt", "w") as file:
+            file.write(str(data))
+        for i in range(len(data)):
+            pression.append(data[i][0])
+            temperature.append(data[i][1])
+
         # PRESSURE
         display.draw_black.line((40, mini, 40, maxi + 20), fill=0, width=1)  # GRAPH AXIS
         display.draw_black.text((10, mini), str(max(pression)), fill=0, font=font12)  # MAX AXIS GRAPH LABEL
