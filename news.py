@@ -8,8 +8,10 @@ class News:
         pass
 
     def update(self, api_id):
+        # TODO: check if google news api has been "fixed" (`sources=google-news-fr`)
         self.news_list = requests.get(
-            f"https://newsapi.org/v2/top-headlines?sources=google-news-fr&apiKey={api_id}").json()
+            f"https://newsapi.org/v2/top-headlines?sources=le-monde&apiKey={api_id}"
+        ).json()
         return self.news_list
 
     def selected_title(self):
