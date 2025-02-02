@@ -1,4 +1,6 @@
 # -*- coding:utf-8 -*-
+import argparse
+import logging
 import os
 import colorama
 from colorama import Fore, Style
@@ -7,9 +9,22 @@ from news import *
 from display import *
 import json
 from dotenv import load_dotenv
+
 import argparse
 from datetime import time as _t
 
+
+logger = logging.getLogger(__name__)
+dirname = os.path.dirname(__file__)
+filename = os.path.join(dirname, "conf/logging/main_error.log")
+logging.basicConfig(
+    filename=filename,
+    filemode="a",
+    encoding="utf-8",
+    format="%(asctime)s %(levelname)s %(funcName)s: %(message)s",
+    datefmt="%Y-%m-%d %H:%M:%S",
+    level=logging.DEBUG,
+)
 load_dotenv()
 colorama.init(autoreset=True)
 
@@ -24,7 +39,10 @@ if debug == 0:
 
 def parse_arguments():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--show-graph", help="Display bottom graphs", action="store_true")
+    parser.add_argument(
+        "--show-graph", help="Display bottom graphs", action="store_true"
+    )
+    parser.add_argument("--debug", help="debug mode", action="store_true")
     args = parser.parse_args()
     return args
 
@@ -38,13 +56,15 @@ def map_resize(val, in_mini, in_maxi, out_mini, out_maxi):
     )
 
 def check_for_shutdown():
-    current_time = time.strftime("%H:%M", time.localtime())
-    if "06:00" >= current_time >= "00:00":
-        try:
-            epd7in5b_V2.epdconfig.module_exit(cleanup=True)
-            exit()
-        except Exception as e:
-            print(e)
+    args = parse_arguments()
+    if not args.debug:
+        current_time = time.strftime("%H:%M", time.localtime())
+        if "00:00" <= current_time <= "06:00":
+            try:
+                epd7in5b_V2.epdconfig.module_exit(cleanup=True)
+                exit()
+            except Exception as e:
+                logger.warning(f"Could not shutdown: {e}")
 
 
 def main():
@@ -220,31 +240,38 @@ if __name__ == "__main__":
             current_time = time.strftime("%d/%m/%Y %H:%M:%S", time.localtime())
             print(Fore.RED + "INITIALIZATION PROBLEM- @" + current_time)
             print(e)
+            logger.warning(Fore.RED + "INITIALIZATION PROBLEM- @" + current_time)
+            logger.warning(e)   
             time.sleep(2)
 
     epd = epd7in5b_V2.EPD()
     while True:
-        # Defining objects
-        current_time = time.strftime("%d/%m/%Y %H:%M", time.localtime())
-        print(Fore.YELLOW + "Begin update at" + current_time)
-        print(Fore.YELLOW + "Creating display")
-        display = Display()
-        # Update values
-        weather.update()
-        print(Fore.GREEN + "Weather Updated")
-        # pollution.update(lat, lon, api_key_weather)
-        news.update(api_key_news)
-        print(Fore.GREEN + "News Updated")
+        try:
+            # Defining objects
+            current_time = time.strftime("%d/%m/%Y %H:%M", time.localtime())
+            print(Fore.YELLOW + "Begin update at" + current_time)
+            print(Fore.YELLOW + "Creating display")
+            display = Display()
+            # Update values
+            weather.update()
+            print(Fore.GREEN + "Weather Updated")
+            # pollution.update(lat, lon, api_key_weather)
+            news.update(api_key_news)
+            print(Fore.GREEN + "News Updated")
 
-        print(Fore.GREEN + Style.BRIGHT + "Main program running...")
-        epd.init()
-        epd.Clear()
-        check_for_shutdown()
-        main()
-        print(Fore.YELLOW + Style.BRIGHT + "Going to sleep...")
-        epd.init()
-        epd.sleep()
-        print(Fore.CYAN + "Sleeping ZZZzzzzZZZzzz")
-        print(Fore.CYAN + "Done")
-        print("------------")
-        time.sleep(1800)
+            print(Fore.GREEN + Style.BRIGHT + "Main program running...")
+            epd.init()
+            epd.Clear()
+            check_for_shutdown()
+            main()
+            print(Fore.YELLOW + Style.BRIGHT + "Going to sleep...")
+            epd.init()
+            epd.sleep()
+            print(Fore.CYAN + "Sleeping ZZZzzzzZZZzzz")
+            print(Fore.CYAN + "Done")
+            print("------------")
+            time.sleep(1800)
+        except Exception as e:
+            logger.error(f"Unexpected error: {e}", exc_info=True)
+            print(Fore.RED + f"Error: {e}")
+            time.sleep(5)  # Avoid CPU overload if it keeps failing
