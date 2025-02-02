@@ -1,7 +1,9 @@
 # -*- coding:utf-8 -*-
 
-import requests
 import textwrap
+
+import requests
+
 
 class News:
     def __init__(self):

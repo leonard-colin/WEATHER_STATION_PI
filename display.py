@@ -32,8 +32,8 @@ font48 = ImageFont.truetype(project_font, 48)
 
 class Display:
     def __init__(self):
-        self.im_black = Image.new('1', (800, 480), 255)
-        self.im_red = Image.new('1', (800, 480), 255)
+        self.im_black = Image.new("1", (800, 480), 255)
+        self.im_red = Image.new("1", (800, 480), 255)
         self.draw_black = ImageDraw.Draw(self.im_black)
         self.draw_red = ImageDraw.Draw(self.im_red)
 

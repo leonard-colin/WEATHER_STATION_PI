@@ -27,12 +27,11 @@
 # THE SOFTWARE.
 #
 
-import os
 import logging
+import os
+import subprocess
 import sys
 import time
-import subprocess
-
 from ctypes import *
 
 logger = logging.getLogger(__name__)
@@ -49,8 +48,8 @@ class RaspberryPi:
     SCLK_PIN = 11
 
     def __init__(self):
-        import spidev
         import gpiozero
+        import spidev
 
         self.SPI = spidev.SpiDev()
         self.GPIO_RST_PIN = gpiozero.LED(self.RST_PIN)
@@ -117,22 +116,22 @@ class RaspberryPi:
         if cleanup:
             find_dirs = [
                 os.path.dirname(os.path.realpath(__file__)),
-                '/usr/local/lib',
-                '/usr/lib',
+                "/usr/local/lib",
+                "/usr/lib",
             ]
             self.DEV_SPI = None
             for find_dir in find_dirs:
-                val = int(os.popen('getconf LONG_BIT').read())
+                val = int(os.popen("getconf LONG_BIT").read())
                 logging.debug("System is %d bit" % val)
                 if val == 64:
-                    so_filename = os.path.join(find_dir, 'DEV_Config_64.so')
+                    so_filename = os.path.join(find_dir, "DEV_Config_64.so")
                 else:
-                    so_filename = os.path.join(find_dir, 'DEV_Config_32.so')
+                    so_filename = os.path.join(find_dir, "DEV_Config_32.so")
                 if os.path.exists(so_filename):
                     self.DEV_SPI = CDLL(so_filename)
                     break
             if self.DEV_SPI is None:
-                RuntimeError('Cannot find DEV_Config.so')
+                RuntimeError("Cannot find DEV_Config.so")
 
             self.DEV_SPI.DEV_Module_Init()
 
@@ -170,21 +169,23 @@ class JetsonNano:
 
     def __init__(self):
         import ctypes
+
         find_dirs = [
             os.path.dirname(os.path.realpath(__file__)),
-            '/usr/local/lib',
-            '/usr/lib',
+            "/usr/local/lib",
+            "/usr/lib",
         ]
         self.SPI = None
         for find_dir in find_dirs:
-            so_filename = os.path.join(find_dir, 'sysfs_software_spi.so')
+            so_filename = os.path.join(find_dir, "sysfs_software_spi.so")
             if os.path.exists(so_filename):
                 self.SPI = ctypes.cdll.LoadLibrary(so_filename)
                 break
         if self.SPI is None:
-            raise RuntimeError('Cannot find sysfs_software_spi.so')
+            raise RuntimeError("Cannot find sysfs_software_spi.so")
 
         import Jetson.GPIO
+
         self.GPIO = Jetson.GPIO
 
     def digital_write(self, pin, value):
@@ -226,7 +227,9 @@ class JetsonNano:
         self.GPIO.output(self.DC_PIN, 0)
         self.GPIO.output(self.PWR_PIN, 0)
 
-        self.GPIO.cleanup([self.RST_PIN, self.DC_PIN, self.CS_PIN, self.BUSY_PIN, self.PWR_PIN])
+        self.GPIO.cleanup(
+            [self.RST_PIN, self.DC_PIN, self.CS_PIN, self.BUSY_PIN, self.PWR_PIN]
+        )
 
 
 class SunriseX3:
@@ -239,8 +242,8 @@ class SunriseX3:
     Flag = 0
 
     def __init__(self):
-        import spidev
         import Hobot.GPIO
+        import spidev
 
         self.GPIO = Hobot.GPIO
         self.SPI = spidev.SpiDev()
@@ -293,25 +296,34 @@ class SunriseX3:
         self.GPIO.output(self.DC_PIN, 0)
         self.GPIO.output(self.PWR_PIN, 0)
 
-        self.GPIO.cleanup([self.RST_PIN, self.DC_PIN, self.CS_PIN, self.BUSY_PIN], self.PWR_PIN)
+        self.GPIO.cleanup(
+            [self.RST_PIN, self.DC_PIN, self.CS_PIN, self.BUSY_PIN], self.PWR_PIN
+        )
 
 
 if sys.version_info[0] == 2:
-    process = subprocess.Popen("cat /proc/cpuinfo | grep Raspberry", shell=True, stdout=subprocess.PIPE)
+    process = subprocess.Popen(
+        "cat /proc/cpuinfo | grep Raspberry", shell=True, stdout=subprocess.PIPE
+    )
 else:
-    process = subprocess.Popen("cat /proc/cpuinfo | grep Raspberry", shell=True, stdout=subprocess.PIPE, text=True)
+    process = subprocess.Popen(
+        "cat /proc/cpuinfo | grep Raspberry",
+        shell=True,
+        stdout=subprocess.PIPE,
+        text=True,
+    )
 output, _ = process.communicate()
 if sys.version_info[0] == 2:
     output = output.decode(sys.stdout.encoding)
 
 if "Raspberry" in output:
     implementation = RaspberryPi()
-elif os.path.exists('/sys/bus/platform/drivers/gpio-x3'):
+elif os.path.exists("/sys/bus/platform/drivers/gpio-x3"):
     implementation = SunriseX3()
 else:
     implementation = JetsonNano()
 
-for func in [x for x in dir(implementation) if not x.startswith('_')]:
+for func in [x for x in dir(implementation) if not x.startswith("_")]:
     setattr(sys.modules[__name__], func, getattr(implementation, func))
 
 ### END OF FILE ###

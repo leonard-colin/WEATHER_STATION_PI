@@ -29,6 +29,7 @@
 
 
 import logging
+
 import epdconfig
 
 # Display resolution
@@ -78,7 +79,7 @@ class EPD:
         logger.debug("e-Paper busy")
         self.send_command(0x71)
         busy = epdconfig.digital_read(self.busy_pin)
-        while (busy == 0):
+        while busy == 0:
             self.send_command(0x71)
             busy = epdconfig.digital_read(self.busy_pin)
         epdconfig.delay_ms(200)
@@ -99,14 +100,14 @@ class EPD:
         self.send_command(0x01)  # POWER SETTING
         self.send_data(0x07)
         self.send_data(0x07)  # VGH=20V,VGL=-20V
-        self.send_data(0x3f)  # VDH=15V
-        self.send_data(0x3f)  # VDL=-15V
+        self.send_data(0x3F)  # VDH=15V
+        self.send_data(0x3F)  # VDL=-15V
 
         self.send_command(0x04)  # POWER ON
         epdconfig.delay_ms(100)
         self.ReadBusy()
 
-        self.send_command(0X00)  # PANNEL SETTING
+        self.send_command(0x00)  # PANNEL SETTING
         self.send_data(0x0F)  # KW-3f KWR-2F BWROTP-0f BWOTP-1f
 
         self.send_command(0x61)  # tres
@@ -115,14 +116,14 @@ class EPD:
         self.send_data(0x01)  # gate 480
         self.send_data(0xE0)
 
-        self.send_command(0X15)
+        self.send_command(0x15)
         self.send_data(0x00)
 
-        self.send_command(0X50)  # VCOM AND DATA INTERVAL SETTING
+        self.send_command(0x50)  # VCOM AND DATA INTERVAL SETTING
         self.send_data(0x11)
         self.send_data(0x07)
 
-        self.send_command(0X60)  # TCON SETTING
+        self.send_command(0x60)  # TCON SETTING
         self.send_data(0x22)
 
         self.send_command(0x65)
@@ -137,10 +138,10 @@ class EPD:
         img = image
         imwidth, imheight = img.size
         if imwidth == self.width and imheight == self.height:
-            img = img.convert('1')
+            img = img.convert("1")
         elif imwidth == self.height and imheight == self.width:
             # image has correct dimensions, but needs to be rotated
-            img = img.rotate(90, expand=True).convert('1')
+            img = img.rotate(90, expand=True).convert("1")
         else:
             logger.warning(
                 f"Wrong image dimensions: must be {str(self.width)}x{str(self.height)}"
@@ -148,7 +149,7 @@ class EPD:
             # return a blank buffer
             return [0x00] * (int(self.width / 8) * self.height)
 
-        buf = bytearray(img.tobytes('raw'))
+        buf = bytearray(img.tobytes("raw"))
         # The bytes need to be inverted, because in the PIL world 0=black and 1=white, but
         # in the e-paper world 0=white and 1=black.
         for i in range(len(buf)):
@@ -171,7 +172,7 @@ class EPD:
 
     def Clear(self):
         buf = [0x00] * (int(self.width / 8) * self.height)
-        buf2 = [0xff] * (int(self.width / 8) * self.height)
+        buf2 = [0xFF] * (int(self.width / 8) * self.height)
         self.send_command(0x10)
         self.send_data2(buf2)
 
@@ -187,8 +188,10 @@ class EPD:
         self.ReadBusy()
 
         self.send_command(0x07)  # DEEP_SLEEP
-        self.send_data(0XA5)
+        self.send_data(0xA5)
 
         epdconfig.delay_ms(2000)
         epdconfig.module_exit()
+
+
 ### END OF FILE ###

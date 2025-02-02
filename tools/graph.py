@@ -9,6 +9,7 @@ def _map_resize(val, in_mini, in_maxi, out_mini, out_maxi):
         else out_mini
     )
 
+
 def init_graph(weather, display):
     pression = []
     temperature = []
@@ -26,7 +27,7 @@ def init_graph(weather, display):
                 weather.prevision[1] = json.loads(file.read())
                 data = weather.prevision[1]
                 been_reboot = 0
-        except:
+        except Exception:
             pass
 
     with open("saved.txt", "w") as file:
@@ -36,9 +37,7 @@ def init_graph(weather, display):
         temperature.append(data[i][1])
 
     # PRESSURE
-    display.draw_black.line(
-        (40, mini, 40, maxi + 20), fill=0, width=1
-    )  # GRAPH AXIS
+    display.draw_black.line((40, mini, 40, maxi + 20), fill=0, width=1)  # GRAPH AXIS
     display.draw_black.text(
         (10, mini), str(max(pression)), fill=0, font=font12
     )  # MAX AXIS GRAPH LABEL
@@ -65,17 +64,13 @@ def init_graph(weather, display):
                 x[i],
                 _map_resize(pression[i], min(pression), max(pression), maxi, mini),
                 x[i + 1],
-                _map_resize(
-                    pression[i + 1], min(pression), max(pression), maxi, mini
-                ),
+                _map_resize(pression[i + 1], min(pression), max(pression), maxi, mini),
             ),
             fill=0,
             width=2,
         )
     # TEMPERATURE
-    display.draw_black.line(
-        (430, mini, 430, maxi + 20), fill=0, width=1
-    )  # GRAPH AXIS
+    display.draw_black.line((430, mini, 430, maxi + 20), fill=0, width=1)  # GRAPH AXIS
     display.draw_black.text(
         (410, mini), str(max(temperature)), fill=0, font=font12
     )  # MAX AXIS GRAPH LABEL
@@ -92,9 +87,7 @@ def init_graph(weather, display):
         display.draw_black.text((x[i] + 400, 455), j[i], fill=0, font=font12)
         display.draw_circle(
             x[i] + 400,
-            _map_resize(
-                temperature[i], min(temperature), max(temperature), maxi, mini
-            ),
+            _map_resize(temperature[i], min(temperature), max(temperature), maxi, mini),
             3,
             "r",
         )
