@@ -5,6 +5,7 @@ LAT = os.environ.get("LATITUDE")
 LON = os.environ.get("LONGITUDE")
 CITY = os.environ.get("CITY")
 
+
 def get_location():
     try:
         response = requests.get("http://ip-api.com/json/")

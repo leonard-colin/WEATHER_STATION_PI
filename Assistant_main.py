@@ -2,7 +2,6 @@
 import argparse
 import logging
 import os
-# from datetime import time
 
 import colorama
 from colorama import Fore, Style
